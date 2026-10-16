@@ -1,4 +1,7 @@
 import re
+import base64
+import hashlib
+import json
 
 import requests
 
@@ -16,6 +19,7 @@ def send_resend_email(
     body: str,
     recipient_consented: bool,
     approved: bool,
+    resume_text: str = "",
 ) -> str:
     """Send one reviewed email through Resend after explicit consent and approval."""
     if not recipient_consented:
@@ -31,23 +35,36 @@ def send_resend_email(
     if not subject.strip() or not body.strip():
         raise ValueError("Email subject and body must not be empty.")
 
+    payload = {
+        "from": sender.strip(),
+        "to": [recipient.strip()],
+        "subject": subject.strip(),
+        "text": body.strip(),
+    }
+    if resume_text.strip():
+        payload["attachments"] = [{
+            "filename": "resume.txt",
+            "content": base64.b64encode(resume_text.encode("utf-8")).decode("ascii"),
+        }]
+    idempotency_key = hashlib.sha256(
+        json.dumps(payload, sort_keys=True).encode("utf-8")
+    ).hexdigest()
+
     try:
         response = requests.post(
             RESEND_API_URL,
             headers={
                 "Authorization": f"Bearer {api_key.strip()}",
                 "Content-Type": "application/json",
+                "Idempotency-Key": idempotency_key,
             },
-            json={
-                "from": sender.strip(),
-                "to": [recipient.strip()],
-                "subject": subject.strip(),
-                "text": body.strip(),
-            },
+            json=payload,
             timeout=20,
         )
     except requests.RequestException:
-        raise RuntimeError("Resend request failed; check your connection and try again.") from None
+        raise RuntimeError(
+            "Resend could not confirm delivery. Check your Resend dashboard before retrying."
+        ) from None
     if not response.ok:
         raise RuntimeError(f"Resend returned HTTP {response.status_code}.")
     try:

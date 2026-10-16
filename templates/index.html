@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf }}">
+  <title>Job Scout</title>
+  <link rel="stylesheet" href="/style.css">
+  {% if authenticated %}<script src="/app.js" defer></script>{% endif %}
+</head>
+<body>
+  <header>
+    <div><span class="eyebrow">WORLDWIDE REMOTE OPPORTUNITIES</span><h1>Job Scout</h1></div>
+    {% if authenticated %}
+    <form action="/logout" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="secondary">Sign out</button></form>
+    {% endif %}
+  </header>
+  <main>
+    {% if not configured %}
+    <section class="panel">
+      <h2>Deployment is running. Finish private access setup.</h2>
+      <p>In Vercel Project Settings &rarr; Environment Variables, set <code>APP_PASSWORD</code>
+      (at least 16 characters) and <code>APP_SECRET_KEY</code> (a random secret of at least 32 characters).
+      Redeploy after saving them. No AI or email operations are enabled until setup is complete.</p>
+    </section>
+    {% elif not authenticated %}
+    <section class="panel login">
+      <h2>Your private job-search workspace</h2>
+      <p>Sign in to find remote roles, prepare truthful resume drafts, and review every email before sending.</p>
+      {% if error %}<p role="alert" class="error">{{ error }}</p>{% endif %}
+      <form method="post" action="/login">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <label>App password<input type="password" name="password" required autocomplete="current-password"></label>
+        <button>Sign in</button>
+      </form>
+    </section>
+    {% else %}
+    <p class="intro">Find your next role. Build a stronger resume. Stay in control of every application.</p>
+    <section class="panel">
+      <h2>Session credentials</h2>
+      <p>Keys and resumes stay in page memory until refresh; never saved in browser storage or on this server.
+        AI requests send your supplied text to OpenAI. Email requests send the reviewed message to Resend.</p>
+      <div class="grid">
+        <label>OpenAI API key<input id="api-key" type="password" autocomplete="off"></label>
+        <label>Resend API key (only for sending)<input id="resend-key" type="password" autocomplete="off"></label>
+        <label>Verified sender email<input id="sender" type="email" autocomplete="off"></label>
+      </div>
+      <p class="note">Job discovery is free and needs no key. OpenAI and Resend usage may incur charges. This is a private owner-operated app, not a multi-customer portal.</p>
+    </section>
+    <nav aria-label="Workflows">
+      <button id="show-jobs">Job seeker</button><button id="show-service" class="secondary">Resume service</button>
+    </nav>
+    <section id="jobs-panel">
+      <div class="panel">
+        <h2>Discover worldwide remote jobs</h2>
+        <p>Listings from <a href="https://remoteok.com/" target="_blank" rel="noopener">Remote OK</a>.
+          Recent feed only; remote does not always mean eligible from every country. Check each employer's requirements.</p>
+        <label>Target roles (comma-separated)<input id="roles" value="AI Automation Engineer, Prompt Engineer, Full-Stack Developer" maxlength="500"></label>
+        <button id="find-jobs">Find jobs &mdash; no API key needed</button>
+      </div>
+      <div class="panel">
+        <h2>Your application profile</h2>
+        <label>Your name<input id="name" maxlength="200"></label>
+        <label>Your resume<textarea id="resume" rows="9" maxlength="10000"></textarea></label>
+        <p class="note">Generate and review materials one job at a time. AI drafts can contain mistakes: verify all facts before sending.</p>
+      </div>
+      <div id="job-results"></div>
+    </section>
+    <section id="service-panel" hidden>
+      <div class="panel">
+        <h2>Review an opted-in client's resume</h2>
+        <p>Offer a real, optional service without guaranteeing employment. Payment is arranged and verified manually.</p>
+        <label>Client name<input id="client-name" maxlength="200"></label>
+        <label>Client email<input id="client-email" type="email" maxlength="320"></label>
+        <label>Client resume<textarea id="client-resume" rows="9" maxlength="10000"></textarea></label>
+        <label class="check"><input id="client-consent" type="checkbox">This person requested this review and explicitly agreed to email follow-up.</label>
+        <button id="review-resume">Analyze resume</button>
+        <div id="review-result"></div>
+        <label>Your service includes<textarea id="service-description" rows="3" maxlength="3000"></textarea></label>
+        <div class="grid">
+          <label>Price and currency (optional)<input id="price" maxlength="200"></label>
+          <label>Payment instructions (optional)<input id="payment" maxlength="1000"></label>
+        </div>
+        <button id="offer" disabled>Draft optional service offer</button>
+        <label class="check"><input id="payment-verified" type="checkbox">I manually verified this client's payment for this service.</label>
+        <button id="improve" disabled>Prepare paid resume improvement</button>
+        <div id="improved-result"></div>
+        <div id="service-email"></div>
+      </div>
+    </section>
+    <p id="status" role="status" aria-live="polite"></p>
+    {% endif %}
+  </main>
+  <footer>Human-reviewed applications. No automatic outreach. Job listings provided by <a href="https://remoteok.com/">Remote OK</a>.</footer>
+</body>
+</html>

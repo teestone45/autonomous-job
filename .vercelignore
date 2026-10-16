@@ -1,0 +1,11 @@
+.git
+.venv
+.vscode
+.env
+.env.*
+config.json
+output
+tests
+__pycache__
+webapp.py
+requirements-local.txt

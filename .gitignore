@@ -6,3 +6,6 @@ __pycache__/
 .pytest_cache/
 output/
 .vscode/
+.vercel/
+.vercel
+.env*

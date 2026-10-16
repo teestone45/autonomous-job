@@ -1,0 +1,31 @@
+:root { color-scheme: dark; font: 16px/1.6 system-ui, sans-serif; background: #0c1220; color: #e5edf8; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header, main, footer { max-width: 1120px; margin: auto; padding: 24px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+h1 { margin: 4px 0; font-size: 2.5rem; letter-spacing: -1.5px; }
+h2 { margin-top: 0; font-size: 1.4rem; }
+h3 { margin: 0 0 8px; }
+a { color: #6ee7d3; overflow-wrap: anywhere; }
+.eyebrow { font-size: .72rem; letter-spacing: 2px; color: #83aece; }
+.intro { color: #afc5dc; font-size: 1.15rem; }
+.panel { padding: 26px; margin: 20px 0; border: 1px solid #29354a; border-radius: 16px; background: #151e2e; }
+.login { max-width: 520px; margin: 8vh auto; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+label { display: block; margin: 16px 0; font-weight: 500; }
+input:not([type="checkbox"]), textarea { width: 100%; display: block; margin: 6px 0; padding: 12px; border: 1px solid #40516c; border-radius: 8px; background: #0c1423; color: #edf4ff; font: inherit; }
+textarea { resize: vertical; }
+input:focus, textarea:focus, button:focus-visible { outline: 2px solid #63d9be; outline-offset: 3px; }
+.check { display: flex; align-items: flex-start; gap: 10px; font-size: .9rem; }
+.check input { flex: 0 0 auto; margin-top: 7px; }
+button { border: 1px solid transparent; border-radius: 8px; padding: 11px 18px; background: #6ee7c7; color: #082a22; cursor: pointer; font-weight: 650; margin: 6px 8px 6px 0; font-size: .95rem; }
+button.secondary { background: #25324a; color: #e5edf8; border-color: #425574; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.note, footer { color: #a6b9d0; font-size: .88rem; }
+.error { color: #ffaba7; }
+.message { white-space: pre-wrap; overflow-wrap: anywhere; }
+.status, #status { position: sticky; bottom: 12px; background: #21324b; border-radius: 8px; padding: 16px; }
+#status:empty { display: none; }
+[hidden] { display: none !important; }
+@media (max-width: 600px) { header, main, footer { padding: 16px; } .panel { padding: 18px; } }
