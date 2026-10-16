@@ -1,0 +1,17 @@
+{
+  "candidate": {
+    "name": "Your Name",
+    "resume_text": "Replace this with your resume text."
+  },
+  "search_preferences": {
+    "target_roles": [
+      "AI Automation Engineer",
+      "Prompt Engineer",
+      "Full-Stack Developer"
+    ]
+  },
+  "matching": {
+    "min_score_threshold": 75,
+    "max_jobs_per_run": 10
+  }
+}
