@@ -90,11 +90,14 @@ def _send_controls(
         "I reviewed the exact recipient, subject, and message above and approve sending it.",
         key=f"{prefix}-approval",
     )
+    message_id = st.session_state.get(f"{prefix}-message-id")
     send_clicked = st.button(
         "Send approved email",
         key=f"{prefix}-send",
-        disabled=not (recipient_consented and approved),
+        disabled=not (recipient_consented and approved) or bool(message_id),
     )
+    if message_id:
+        st.success(f"Already sent. Resend message ID: {message_id}")
     if send_clicked:
         subject = st.session_state.get(f"{prefix}-subject", "")
         body = st.session_state.get(f"{prefix}-body", "")
@@ -111,6 +114,7 @@ def _send_controls(
         except (OSError, RuntimeError, ValueError) as exc:
             st.error(f"Email was not sent: {exc}")
         else:
+            st.session_state[f"{prefix}-message-id"] = message_id
             st.success(f"Email sent. Resend message ID: {message_id}")
 
 
@@ -260,6 +264,7 @@ with applicant_tab:
                         "consent",
                         "approval",
                         "email-route",
+                        "message-id",
                     ):
                         st.session_state.pop(f"{old_key}-{suffix}", None)
                     for suffix in ("generate", "resume-download", "application-send"):
@@ -350,6 +355,7 @@ with service_tab:
                 st.session_state["service-offer-recipient"] = client_email.strip()
                 st.session_state["service-offer-consent"] = False
                 st.session_state["service-offer-approval"] = False
+                st.session_state.pop("service-offer-message-id", None)
 
     review = st.session_state.get("service-review-result")
     if review:
@@ -388,6 +394,7 @@ with service_tab:
                             resume_text=st.session_state["service-client-resume-result"],
                             review=review,
                             service_description=st.session_state["service-description-result"],
+                            payment_verified=True,
                         )
             except (OpenAIError, OSError, RuntimeError, ValueError) as exc:
                 st.error(f"Could not prepare the paid resume service: {exc}")

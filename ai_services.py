@@ -174,8 +174,13 @@ def generate_improved_resume(
     resume_text: str,
     review: dict[str, Any],
     service_description: str,
+    *,
+    payment_verified: bool,
 ) -> str:
     """Prepare an improved resume draft after the service provider confirms payment."""
+    if not payment_verified:
+        raise ValueError("Confirm payment before preparing the paid resume improvement.")
+
     prompt = f"""Improve the resume using the recommendations below and the described service.
 Use only claims and facts explicitly present in the source resume. Do not invent experience,
 skills, employers, dates, metrics, or credentials. Where more facts are needed, insert a

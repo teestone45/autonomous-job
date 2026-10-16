@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from ai_services import generate_application_email
+from ai_services import generate_application_email, generate_improved_resume
 from email_sender import send_resend_email
 
 
@@ -17,6 +17,23 @@ class ApplicationEmailTests(unittest.TestCase):
         self.assertEqual(email["subject"], "Application: Python Engineer — Test Candidate")
         self.assertIn("I am interested in this role.", email["body"])
         self.assertIn("Example Co hiring team", email["body"])
+
+
+class PaidResumeTests(unittest.TestCase):
+    @patch("ai_services._client")
+    def test_refuses_to_prepare_paid_improvement_before_payment(
+        self,
+        client_mock: unittest.mock.Mock,
+    ) -> None:
+        with self.assertRaisesRegex(ValueError, "Confirm payment"):
+            generate_improved_resume(
+                resume_text="Original resume",
+                review={"summary": "Summary", "issues": []},
+                service_description="Resume rewrite",
+                payment_verified=False,
+            )
+
+        client_mock.assert_not_called()
 
 
 class ResendTests(unittest.TestCase):

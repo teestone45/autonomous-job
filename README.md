@@ -30,7 +30,7 @@ Streamlit will print a local address, usually `http://localhost:8501`.
 
 - **Job seeker:** enter your resume and roles, find matches, and generate a tailored resume and application email. Sending requires verifying the job listing accepts email applications, confirming the candidate authorized the email, and approving the exact recipient and message.
 - **Resume service:** enter a resume only after the owner requested the review and opted in to follow-up. Review the findings and optional service offer, then approve before sending. Payment is not processed in the app; manually verify payment before generating the paid resume improvement.
-- The OpenAI and Resend credentials are entered in the private local app session, not saved to project files. Resend requires a verified sender address/domain.
+- OpenAI and Resend credentials are entered in the private local app session and are not saved to project files. Resend requires a verified sender address/domain.
 
 This build is for private local use. It has no user authentication, customer database, or production consent/audit system and must not be exposed as a public service until those are added. Job listings are attributed to [Remote OK](https://remoteok.com/), as required by its API terms.
 
