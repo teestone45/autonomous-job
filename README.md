@@ -1,4 +1,4 @@
-# Job Scout
+# Job Scout (autonomous-job)
 
 A private, local job-search and resume-service assistant. It searches Remote OK's worldwide remote-job feed, scores role matches, drafts tailored resumes and application emails, and can review resumes for people who opted in to your paid service. Emails are never sent automatically: the sender must confirm consent and approve the exact message before sending.
 
